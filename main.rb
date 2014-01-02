@@ -3,7 +3,7 @@ require 'sinatra'
 require 'data_mapper'
 require 'json' 
 
-DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/development.db")
+DataMapper.setup(:default, ENV['DATABASE_URL']) # || "sqlite3://#{Dir.pwd}/development.db")
 
 class Player
 	include DataMapper::Resource
