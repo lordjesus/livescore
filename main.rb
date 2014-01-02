@@ -28,6 +28,9 @@ class Match
 	property :p1_score,		Integer, :default => 0
 	property :p2_score, 	Integer, :default => 0
 
+	property :p1_frames,	Integer, :default => 0
+	property :p2_frames, 	Integer, :default => 0
+
 	has n, :results
 end
 
@@ -41,6 +44,7 @@ class Result
 	property :p2_change,	Integer, :default => 0
 
 	property :is_marker,	Integer, :default => 0 # Used as boolean
+	property :frame, 		Integer, :default => 0
 
 	belongs_to :match
 end
@@ -173,6 +177,51 @@ get '/matches/:m_id/results/:r_id' do
 	end
 end
 
+delete '/matches/:m_id/results/:r_id' do
+	@match = Match.get(params[:m_id])
+	if @match
+		@result = Result.get(params[:r_id])
+		if @result
+			@result.destroy
+			redirect "/matches/#{params[:id]}/results"
+		end
+	else
+		status 404
+		'match not found'
+	end
+end
+
+# Starts new frame. Winner is highest score. Optional win parameter ?winner=[p1|p2]
+post '/matches/:id/newframe' do
+	@match = Match.get(params[:id])
+	if @match
+		winner = 'p1';
+		if (params[:winner] && (params[:winner] == 'p1' || params[:winner] == 'p2'))
+			if params[:winner] == 'p1'
+				@match.p1_frames = @match.p1_frames + 1
+			else
+				@match.p2_frames = @match.p2_frames + 1
+				winner = 'p2'
+			end
+		else
+			if @match.p1_score > @match.p2_score
+				@match.p1_frames = @match.p1_frames + 1
+			else
+				@match.p2_frames = @match.p2_frames + 1
+				winner = 'p2'
+			end
+		end
+		@match.p1_score = 0
+		@match.p2_score = 0
+		@match.save
+
+		"Winner of frame is #{winner}"
+	else
+		status 404
+		'not found'
+	end
+end
+
 # Add result to match with querystring ?p1_change=x&p2_change=y&is_marker=n
 post '/matches/:id/results' do
 	@match = Match.get(params[:id])
@@ -197,11 +246,15 @@ post '/matches/:id/results' do
 		@result.match = @match
 
 		if @result.save
+			@match.p1_score = @match.p1_score + p1.to_i
+			@match.p2_score = @match.p2_score + p2.to_i
+			@match.save
+
 			status 201
-			redirect '/matches/:id/results/' + @result.id.to_s
+			redirect "/matches/#{params[:id]}/results/" + @result.id.to_s
 		else 
 			status 412
-			'/matches/:id/results'
+			redirect "/matches/#{params[:id]}/results"
 		end		
 	else
 		status 404
@@ -234,6 +287,22 @@ post '/matches/create' do
 			status 412
 			redirect '/matches'
 		end
+	end
+end
+
+# Delete a match and all it's results
+delete '/matches/:id' do
+	@match = Match.get(params[:id])
+	if @match
+		@results = @match.results
+		@results.each do |r|
+			r.destroy
+		end
+		@match.destroy
+		'destroyed'
+	else
+		status 404
+		'match not found'
 	end
 end
 
