@@ -275,6 +275,7 @@ post '/matches/create' do
 		
 		match.p1_id = params[:p1]
 		match.p2_id = params[:p2]
+		match.start_time = DateTime.now
 
 		if (params[:distance])
 			match.distance = params[:distance]
@@ -299,7 +300,7 @@ delete '/matches/:id' do
 			r.destroy
 		end
 		@match.destroy
-		'destroyed'
+		redirect '/matches'
 	else
 		status 404
 		'match not found'
