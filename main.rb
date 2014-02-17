@@ -3,6 +3,19 @@ require 'sinatra'
 require 'data_mapper'
 require 'json' 
 
+configure :development, :test do
+    set :host, 'localhost:9999'
+    set :force_ssl, false
+  end
+  configure :staging do
+    set :host, 'snookerscore.herokuapp.com'
+    set :force_ssl, true
+  end
+  configure :production do
+    set :host, 'snookerscore.herokuapp.com'
+    set :force_ssl, true
+  end
+
 DataMapper.setup(:default, ENV['DATABASE_URL']) # || "sqlite3://#{Dir.pwd}/development.db")
 
 class Player

@@ -5,7 +5,7 @@ git commit -m "$msg"
 git push
 echo "Push to Heroku?"
 read ans
-if [ "$ans" = "y"]
+if [ "$ans" = "y" ]
 then 
 	git push heroku master
 fi
