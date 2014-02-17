@@ -31,6 +31,8 @@ class Match
 	property :p1_frames,	Integer, :default => 0
 	property :p2_frames, 	Integer, :default => 0
 
+	property :active,		Integer, :default => 0
+
 	has n, :results
 end
 
@@ -49,12 +51,26 @@ class Result
 	belongs_to :match
 end
 
+helpers do
+  def protected!
+    return if authorized?
+    headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+    halt 401, "Not authorized\n"
+  end
+
+  def authorized?
+    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+    @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == ['admin', 'admin']
+  end
+end
+
 ##############################################
 ############## P L A Y E R S #################
 ##############################################
 
 # Get all players
 get '/players' do
+	protected!
 	@players = Player.all
 	content_type :json
 	@players.to_json
