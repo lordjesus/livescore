@@ -70,7 +70,7 @@ end
 
 # Get all players
 get '/players' do
-	protected!
+
 	@players = Player.all
 	content_type :json
 	@players.to_json
@@ -91,6 +91,7 @@ end
 
 # Create player
 post '/players/create' do
+	protected!
 	if params[:name]
 		player = Player.new
 		player.name = params[:name]
@@ -108,6 +109,7 @@ post '/players/create' do
 end
 # Update a player querystring on the form ?name=z
 put '/players/:id' do
+	protected!
 	if Player.get(params[:id])
 		p = Player.get(params[:id])
 		p.name = params[:name]
@@ -126,6 +128,7 @@ end
 
 # Delete a player
 delete '/players/:id' do
+	protected!
 	if Player.get(params[:id])
 		Player.get(params[:id]).destroy
 		redirect '/players'
@@ -194,6 +197,7 @@ get '/matches/:m_id/results/:r_id' do
 end
 
 delete '/matches/:m_id/results/:r_id' do
+	protected!
 	@match = Match.get(params[:m_id])
 	if @match
 		@result = Result.get(params[:r_id])
@@ -209,6 +213,7 @@ end
 
 # Starts new frame. Winner is highest score. Optional win parameter ?winner=[p1|p2]
 post '/matches/:id/newframe' do
+	protected!
 	@match = Match.get(params[:id])
 	if @match
 		winner = 'p1';
@@ -240,6 +245,7 @@ end
 
 # Add result to match with querystring ?p1_change=x&p2_change=y&is_marker=n
 post '/matches/:id/results' do
+	protected!
 	@match = Match.get(params[:id])
 	if @match
 		p1 = 0
@@ -280,6 +286,7 @@ end
 
 # Create new match with querystring ?p1=x&p2=y&distance=n&name=z
 post '/matches/create' do
+	protected!
 	if (!params[:p1] || !params[:p2])
 		status 400
 		'Must include querystring on the form ?p1=x&p2=y&distance=n&name=z'
@@ -309,6 +316,7 @@ end
 
 # Delete a match and all it's results
 delete '/matches/:id' do
+	protected!
 	@match = Match.get(params[:id])
 	if @match
 		@results = @match.results
