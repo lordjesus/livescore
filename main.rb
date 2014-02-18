@@ -155,9 +155,14 @@ end
 ############## M A T C H E S #################
 ##############################################
 
-# Get all matches
+# Get all matches, querystring ?active=true only shows active matches
 get '/matches' do 
-	@matches = Match.all
+	active = params[:active]
+	if active
+		@matches = Match.all(:active => 1)
+	else
+		@matches = Match.all
+	end
 	content_type :json
 	@matches.to_json
 end
@@ -168,6 +173,21 @@ get '/matches/:id' do
 	if @match
 		content_type :json
 		@match.to_json
+	else
+		status 404
+		'not found'
+	end
+end
+
+# Get specific match score: p1_score, p2_score, p1_frames, p2_frames
+get '/matches/:id/score' do
+	@match = Match.get(params[:id])
+	if @match
+		score = { :p1_score => @match.p1_score, :p2_score => @match.p2_score,
+				  :p1_frames => @match.p1_frames, :p2_frames => @match.p2_frames }
+
+		content_type :json
+		@score.to_json
 	else
 		status 404
 		'not found'
