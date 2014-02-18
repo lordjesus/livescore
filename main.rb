@@ -158,7 +158,7 @@ end
 # Get all matches, querystring ?active=true only shows active matches
 get '/matches' do 
 	active = params[:active]
-	if active
+	if active && (active.downcase == "true" || active.downcase == "t")
 		@matches = Match.all(:active => 1)
 	else
 		@matches = Match.all
