@@ -196,13 +196,6 @@ get '/matches/:id/score' do
 	end
 end
 
-active = params[:active]
-	if active && (active.downcase == "true" || active.downcase == "t")
-		@matches = Match.all(:active => 1)
-	else
-		@matches = Match.all
-	end
-
 # Get results of match, optional querystring ?latest=true only gets latest result
 get '/matches/:id/results' do
 	@match = Match.get(params[:id])
