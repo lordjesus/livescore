@@ -61,6 +61,8 @@ class Result
 	property :is_marker,	Integer, :default => 0 # Used as boolean
 	property :frame, 		Integer, :default => 0
 
+	property :turn, 		Integer, :default => 0 # 0: player 1, 1: player 2
+
 	belongs_to :match
 end
 
