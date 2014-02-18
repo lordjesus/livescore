@@ -196,11 +196,23 @@ get '/matches/:id/score' do
 	end
 end
 
-# Get results of match
+active = params[:active]
+	if active && (active.downcase == "true" || active.downcase == "t")
+		@matches = Match.all(:active => 1)
+	else
+		@matches = Match.all
+	end
+
+# Get results of match, optional querystring ?latest=true only gets latest result
 get '/matches/:id/results' do
 	@match = Match.get(params[:id])
 	if @match
-		@results = @match.results
+		latest = params[:latest]
+		if latest && (latest.downcase == "true" || latest.downcase == "t")
+			@results = @match.results.last
+		else
+			@results = @match.results
+		end
 		content_type :json
 		@results.to_json
 	else
