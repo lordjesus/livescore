@@ -293,7 +293,7 @@ post '/matches/:id/end' do
 	end
 end
 
-# Add result to match with querystring ?p1_change=x&p2_change=y&is_marker=n
+# Add result to match with querystring ?p1_change=x&p2_change=y&is_marker=n&turn=t
 post '/matches/:id/results' do
 	protected!
 	@match = Match.get(params[:id])
@@ -301,6 +301,7 @@ post '/matches/:id/results' do
 		p1 = 0
 		p2 = 0
 		marker = 0
+		turn = 0;
 		if params[:p1_change]
 			p1 = params[:p1_change]
 		end
@@ -310,11 +311,15 @@ post '/matches/:id/results' do
 		if params[:is_marker]
 			marker = params[:is_marker]
 		end
+		if params[:turn]
+			turn = params[:turn]
+		end
 
 		@result = Result.new
 		@result.p1_change = p1
 		@result.p2_change = p2
 		@result.is_marker = marker
+		@result.turn = turn
 		@result.match = @match
 
 		if @result.save
