@@ -276,6 +276,21 @@ post '/matches/:id/newframe' do
 	end
 end
 
+post '/matches/:id/end' do
+	protected!
+	@match = Match.get(params[:id])
+	if @match
+		@match.active = 0
+		@match.save
+
+		status 200
+		redirect "/matches/#{params[:id]}"
+	else
+		status 404
+		'not found'
+	end
+end
+
 # Add result to match with querystring ?p1_change=x&p2_change=y&is_marker=n
 post '/matches/:id/results' do
 	protected!
@@ -301,6 +316,7 @@ post '/matches/:id/results' do
 		@result.match = @match
 
 		if @result.save
+			@match.active = 1
 			@match.p1_score = @match.p1_score + p1.to_i
 			@match.p2_score = @match.p2_score + p2.to_i
 			@match.save
