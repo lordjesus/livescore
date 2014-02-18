@@ -187,7 +187,7 @@ get '/matches/:id/score' do
 				  :p1_frames => @match.p1_frames, :p2_frames => @match.p2_frames }
 
 		content_type :json
-		@score.to_json
+		score.to_json
 	else
 		status 404
 		'not found'
