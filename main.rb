@@ -79,6 +79,10 @@ helpers do
   end
 end
 
+options '/*' do
+  response["Access-Control-Allow-Headers"] = "origin, x-requested-with, content-type"
+end
+
 ##############################################
 ############## P L A Y E R S #################
 ##############################################
