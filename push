@@ -3,7 +3,7 @@ read msg
 git add .
 git commit -m "$msg"
 git push
-echo "Push to Heroku?"
+echo "Push to Heroku? (y)"
 read ans
 if [ "$ans" = "y" ]
 then 
