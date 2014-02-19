@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'sinatra'
+require 'sinatra/cross_origin'
 require 'data_mapper'
 require 'json' 
 
