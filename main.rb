@@ -79,9 +79,9 @@ helpers do
   end
 end
 
-options '/*' do
-  response["Access-Control-Allow-Headers"] = "origin, x-requested-with, content-type"
-end
+register Sinatra::CrossOrigin
+ 
+enable cross_origin
 
 ##############################################
 ############## P L A Y E R S #################
