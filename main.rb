@@ -81,7 +81,7 @@ helpers do
 end
 
 register Sinatra::CrossOrigin
- 
+ cross_origin
 
 
 ##############################################
@@ -164,7 +164,7 @@ end
 
 # Get all matches, querystring ?active=true only shows active matches
 get '/matches' do 
-	cross_origin
+	
 	active = params[:active]
 	if active && (active.downcase == "true" || active.downcase == "t")
 		@matches = Match.all(:active => 1)
