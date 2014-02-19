@@ -4,18 +4,20 @@ require 'sinatra/cross_origin'
 require 'data_mapper'
 require 'json' 
 
-configure :development, :test do
-    set :host, 'localhost:9999'
-    set :force_ssl, false
-  end
-  configure :staging do
-    set :host, 'snookerscore.herokuapp.com'
-    set :force_ssl, true
-  end
-  configure :production do
-    set :host, 'snookerscore.herokuapp.com'
-    set :force_ssl, true
-  end
+class SnookerScore < Sinatra::Base
+
+	configure :development, :test do
+		set :host, 'localhost:9999'
+		set :force_ssl, false
+	end
+	configure :staging do
+		set :host, 'snookerscore.herokuapp.com'
+		set :force_ssl, true
+	end
+	configure :production do
+		set :host, 'snookerscore.herokuapp.com'
+		set :force_ssl, true
+	end
 
 DataMapper.setup(:default, ENV['DATABASE_URL']) # || "sqlite3://#{Dir.pwd}/development.db")
 
@@ -68,20 +70,20 @@ class Result
 end
 
 helpers do
-  def protected!
-    return if authorized?
-    headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
-    halt 401, "Not authorized\n"
-  end
+	def protected!
+		return if authorized?
+		headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+		halt 401, "Not authorized\n"
+	end
 
-  def authorized?
-    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-    @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == ['admin', 'admin']
-  end
+	def authorized?
+		@auth ||=  Rack::Auth::Basic::Request.new(request.env)
+		@auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == ['admin', 'admin']
+	end
 end
 
 register Sinatra::CrossOrigin
- 
+
 enable cross_origin
 
 ##############################################
@@ -191,15 +193,15 @@ get '/matches/:id/score' do
 	@match = Match.get(params[:id])
 	if @match
 		score = { :p1_score => @match.p1_score, :p2_score => @match.p2_score,
-				  :p1_frames => @match.p1_frames, :p2_frames => @match.p2_frames }
+			:p1_frames => @match.p1_frames, :p2_frames => @match.p2_frames }
 
-		content_type :json
-		score.to_json
-	else
-		status 404
-		'not found'
+			content_type :json
+			score.to_json
+		else
+			status 404
+			'not found'
+		end
 	end
-end
 
 # Get results of match, optional querystring ?latest=true only gets latest result
 get '/matches/:id/results' do
@@ -221,7 +223,7 @@ end
 
 get '/test/:id/t/:id2' do
 	content_type :json
-		params.to_json
+	params.to_json
 end
 
 get '/matches/:m_id/results/:r_id' do
@@ -403,3 +405,4 @@ delete '/matches/:id' do
 end
 
 DataMapper.auto_upgrade!
+end
