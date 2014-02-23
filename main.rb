@@ -202,7 +202,12 @@ get '/matches/:id/score' do
 	@match = Match.get(params[:id])
 	if @match
 		score = { :p1_score => @match.p1_score, :p2_score => @match.p2_score,
-				  :p1_frames => @match.p1_frames, :p2_frames => @match.p2_frames }
+				  :p1_frames => @match.p1_frames, :p2_frames => @match.p2_frames,
+				  :turn => -1 }
+
+		if @match.results
+			score[:turn] = @match.results.last
+		end
 
 		content_type :json
 		score.to_json
