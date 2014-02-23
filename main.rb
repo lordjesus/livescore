@@ -206,7 +206,7 @@ get '/matches/:id/score' do
 				  :turn => -1 }
 
 		if @match.results
-			score[:turn] = @match.results.last
+			score[:turn] = @match.results.last.turn
 		end
 
 		content_type :json
