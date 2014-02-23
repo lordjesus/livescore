@@ -47,6 +47,8 @@ class Match
 
 	property :active,		Integer, :default => 0
 
+	property :video_link,	String
+
 	has n, :results
 end
 
@@ -116,14 +118,19 @@ end
 post '/players/create' do
 	protected!
 	if params[:name]
-		player = Player.new
-		player.name = params[:name]
-		if player.save
-			status 201
-			redirect '/players/' + player.id.to_s
+		found = Player.first(:name => params[:name])
+		if found
+			redirect '/players/' + found.id.to_s
 		else
-			status 412
-			redirect '/players'
+			player = Player.new
+			player.name = params[:name]
+			if player.save
+				status 201
+				redirect '/players/' + player.id.to_s
+			else
+				status 412
+				redirect '/players'
+			end
 		end
 	else
 		status 400
@@ -359,7 +366,7 @@ post '/matches/:id/results' do
 	end
 end
 
-# Create new match with querystring ?p1=x&p2=y&distance=n&name=z
+# Create new match with querystring ?p1=x&p2=y&distance=n&name=z optional: &video_link=link
 post '/matches/create' do
 	protected!
 	if (!params[:p1] || !params[:p2])
@@ -369,6 +376,9 @@ post '/matches/create' do
 		match = Match.new
 		if (params[:name])
 			match.name = params[:name]
+		end
+		if (params[:video_link])
+			match.video_link = params[:video_link]
 		end
 		
 		match.p1_id = params[:p1]
