@@ -218,13 +218,22 @@ get '/matches/:id/score' do
 end
 
 # Get results of match, optional querystring ?latest=true only gets latest result
+# ?break=true get results of latest break
 get '/matches/:id/results' do
 	@match = Match.get(params[:id])
 	if @match
 		latest = params[:latest]
 		if latest && (latest.downcase == "true" || latest.downcase == "t")
-			@results = @match.results.last
+			@results = @match.results.last 
 		else
+		#	br = params[:break]
+		#	if br && (br.downcase == "true" || br.downcase == "t")
+		#		r = @match.results.reverse
+		#		if r.first.is_marker > 0 
+		#			turn = r.first.turn
+		#			@results = Array.new
+
+		#	end
 			@results = @match.results
 		end
 		content_type :json
