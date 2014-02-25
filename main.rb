@@ -172,14 +172,20 @@ end
 ############## M A T C H E S #################
 ##############################################
 
-# Get all matches, querystring ?active=true only shows active matches
+# Get all matches, querystring ?active=true only shows active matches, 
+# querystring inactive=true only shows inactive matches
 get '/matches' do 
 
 	active = params[:active]
 	if active && (active.downcase == "true" || active.downcase == "t")
 		@matches = Match.all(:active => 1)
 	else
-		@matches = Match.all
+		inactive = params[:inactive]
+		if inactive && (inactive.downcase == "true" || inactive.downcase == "t")
+			@matches = Match.all(:active => 0)
+		else
+			@matches = Match.all
+		end
 	end
 	content_type :json
 	@matches.to_json
@@ -313,10 +319,24 @@ post '/matches/:id/newframe' do
 	end
 end
 
+# Ends match. Optional querystring adjust=true to update frames to match with distance
 post '/matches/:id/end' do
 	protected!
 	@match = Match.get(params[:id])
 	if @match
+		if params[:adjust]
+			if @match.distance % 2 != 0
+				win = @match.distance / 2 + 1
+				if @match.p1_frames < win && @match.p2_frames < win
+					# Only update if none has the required amount of frames
+					if @match.p1_score > @match.p2_score
+						@match.p1_frames = @match.p1_frames + 1
+					else
+						@match.p2_frames = @match.p2_frames + 1
+					end
+				end
+			end
+		end
 		@match.active = 0
 		@match.save
 
