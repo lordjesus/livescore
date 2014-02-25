@@ -304,7 +304,7 @@ post '/matches/:id/newframe' do
 			if @match.p1_score > @match.p2_score
 				@match.p1_frames = @match.p1_frames + 1
 			else
-				@match.p2_frames = @match.p2_frames + 1
+				@match.p2_frames = @match.p2_frames + 1 
 				winner = 'p2'
 			end
 		end
