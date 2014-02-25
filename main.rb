@@ -407,13 +407,13 @@ post '/matches/create' do
 			match.p1_score = params[:p1_score]
 		end
 		if params[:p2_score]
-			match.p1_score = params[:p2_score]
+			match.p2_score = params[:p2_score]
 		end
 		if params[:p1_frames]
-			match.p1_score = params[:p1_frames]
+			match.p1_frames = params[:p1_frames]
 		end
 		if params[:p2_frames]
-			match.p1_score = params[:p2_frames]
+			match.p2_frames = params[:p2_frames]
 		end
 
 		if match.save
