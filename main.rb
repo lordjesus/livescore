@@ -380,7 +380,8 @@ post '/matches/:id/results' do
 	end
 end
 
-# Create new match with querystring ?p1=x&p2=y&distance=n&name=z optional: &video_link=link
+# Create new match with querystring ?p1=x&p2=y&distance=n&name=z&p1_score=x&p2_score=y&p1_frames=x&p2_frames=y 
+# optional: &video_link=link
 post '/matches/create' do
 	protected!
 	if (!params[:p1] || !params[:p2])
@@ -388,10 +389,10 @@ post '/matches/create' do
 		'Must include querystring on the form ?p1=x&p2=y&distance=n&name=z'
 	else
 		match = Match.new
-		if (params[:name])
+		if params[:name]
 			match.name = params[:name]
 		end
-		if (params[:video_link])
+		if params[:video_link]
 			match.video_link = params[:video_link]
 		end
 		
@@ -399,8 +400,20 @@ post '/matches/create' do
 		match.p2_id = params[:p2]
 		match.start_time = DateTime.now
 
-		if (params[:distance])
+		if params[:distance]
 			match.distance = params[:distance]
+		end
+		if params[:p1_score]
+			match.p1_score = params[:p1_score]
+		end
+		if params[:p2_score]
+			match.p1_score = params[:p2_score]
+		end
+		if params[:p1_frames]
+			match.p1_score = params[:p1_frames]
+		end
+		if params[:p2_frames]
+			match.p1_score = params[:p2_frames]
 		end
 
 		if match.save
