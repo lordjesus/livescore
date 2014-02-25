@@ -324,7 +324,8 @@ post '/matches/:id/end' do
 	protected!
 	@match = Match.get(params[:id])
 	if @match
-		if params[:adjust]
+		adjust = params[:adjust]
+		if adjust && (adjust.downcase == "true" || adjust.downcase == "t")
 			if @match.distance % 2 != 0
 				win = @match.distance / 2 + 1
 				if @match.p1_frames < win && @match.p2_frames < win
