@@ -3,6 +3,7 @@ require 'sinatra'
 require 'sinatra/cross_origin'
 require 'data_mapper'
 require 'json' 
+require 'date'
 
 configure :development, :test do
     set :host, 'localhost:9999'
@@ -174,6 +175,7 @@ end
 
 # Get all matches, querystring ?active=true only shows active matches, 
 # querystring inactive=true only shows inactive matches
+# ?fresh=i only shows matches that are at most i days old
 get '/matches' do 
 
 	active = params[:active]
@@ -187,6 +189,13 @@ get '/matches' do
 			@matches = Match.all
 		end
 	end
+	fresh = params[:fresh]
+	if fresh && (fresh.downcase == "true" || fresh.downcase == "t")
+		fresh = fresh.to_i
+		deadline = DateTime.now - fresh
+		@matches = @matches.all(:start_time.gt => deadline)
+	end
+
 	content_type :json
 	@matches.to_json
 end
