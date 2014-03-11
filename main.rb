@@ -193,7 +193,7 @@ get '/matches' do
 	if fresh && (fresh.downcase == "true" || fresh.downcase == "t")
 		fresh = fresh.to_i
 		deadline = DateTime.now - fresh
-		@matches = @matches.all(:start_time.gt => deadline)
+		@matches = Match.all(:start_time.gt => deadline)
 	end
 
 	content_type :json
