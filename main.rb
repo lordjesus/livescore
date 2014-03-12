@@ -421,7 +421,7 @@ post '/matches/create' do
 		match = Match.new
 		if params[:name]
 			match.name = params[:name]
-		end
+		end 
 		if params[:video_link]
 			match.video_link = params[:video_link]
 		end
