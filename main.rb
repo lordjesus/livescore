@@ -177,6 +177,7 @@ end
 # querystring inactive=true only shows inactive matches
 # ?fresh=i only shows matches that are at most i days old
 get '/matches/admin' do
+	@mathces = Match.all
 	erb :'matches/index'
 end
 
