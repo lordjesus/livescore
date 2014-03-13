@@ -176,6 +176,10 @@ end
 # Get all matches, querystring ?active=true only shows active matches, 
 # querystring inactive=true only shows inactive matches
 # ?fresh=i only shows matches that are at most i days old
+get '/matches/admin' do
+	erb :'matches/index'
+end
+
 get '/matches' do 
 
 	active = params[:active]
