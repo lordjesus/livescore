@@ -1,3 +1,5 @@
 <h2>Matches</h2>
 
-Index side
+<% @matches.each do |match| %>
+	<h3><a href="/matches/<%= match.id %>">Match <%= match.id %></a></h3>
+<% end %>
