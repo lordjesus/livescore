@@ -3,7 +3,7 @@
 <% @matches.each do |match| %>
 	<h3><a href="/matches/<%= match.id %>">Match <%= match.id %></a></h3>
 	<form action="/matches/<%= match.id %>" method="post">
-<input type="hidden" name="_method" value="delete" />
-<input type="submit" value="Delete">
-</form>
+		<input type="hidden" name="_method" value="delete" />
+		<input type="submit" value="Delete match <%= match.id %>">
+	</form>
 <% end %>
