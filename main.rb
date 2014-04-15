@@ -352,7 +352,7 @@ post '/matches/:id/end' do
 				end
 			else
 				# It's a group game, distance is even
-				if @match.p1_frames < match.distance && @match.p2_frames < match.distance
+				if @match.p1_frames < @match.distance && @match.p2_frames < @match.distance
 					# Only update if none has the required amount of frames
 					if @match.p1_score > @match.p2_score
 						@match.p1_frames = @match.p1_frames + 1
