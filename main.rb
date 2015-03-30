@@ -264,6 +264,13 @@ get '/matches/:id/results' do
 	end
 end
 
+get '/matches/latest' do
+	@match = Match.all.last
+
+	content_type :json
+	@match.to_json
+end
+
 get '/test/:id/t/:id2' do
 	content_type :json
 		params.to_json
