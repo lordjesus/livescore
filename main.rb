@@ -200,6 +200,10 @@ get '/matches' do
 		deadline = DateTime.now - fresh
 		@matches = Match.all(:start_time.gt => deadline)
 	end
+	latest = params[:latest]
+	if latest
+		@matches = Match.all.last
+	end
 
 	content_type :json
 	@matches.to_json
